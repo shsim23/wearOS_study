@@ -17,6 +17,7 @@ package com.example.android.wearable.alpha
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
@@ -108,6 +109,8 @@ class AnalogWatchCanvasRenderer(
     private val textPaint = Paint().apply {
         isAntiAlias = true
         textSize = context.resources.getDimensionPixelSize(R.dimen.hour_mark_size).toFloat()
+        color = Color.CYAN
+        textAlign = Paint.Align.CENTER
     }
 
     private lateinit var hourHandFill: Path
@@ -247,27 +250,27 @@ class AnalogWatchCanvasRenderer(
 
         canvas.drawColor(backgroundColor)
 
-        // CanvasComplicationDrawable already obeys rendererParameters.
-        drawComplications(canvas, zonedDateTime)
-
-        if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
-            drawClockHands(canvas, bounds, zonedDateTime)
-        }
-
-        if (renderParameters.drawMode == DrawMode.INTERACTIVE &&
-            renderParameters.watchFaceLayers.contains(WatchFaceLayer.BASE) &&
-            watchFaceData.drawHourPips
-        ) {
-            drawNumberStyleOuterElement(
-                canvas,
-                bounds,
-                watchFaceData.numberRadiusFraction,
-                watchFaceData.numberStyleOuterCircleRadiusFraction,
-                watchFaceColors.activeOuterElementColor,
-                watchFaceData.numberStyleOuterCircleRadiusFraction,
-                watchFaceData.gapBetweenOuterCircleAndBorderFraction
-            )
-        }
+        val Xcenter = 0.5f * bounds.width().toFloat()
+        val Ycenter = bounds.width() * (watchFaceData.gapBetweenOuterCircleAndBorderFraction + watchFaceData.numberRadiusFraction)
+        canvas.drawText("${zonedDateTime.hour} : ${zonedDateTime.minute}", Xcenter, Ycenter, textPaint)
+//        if (renderParameters.watchFaceLayers.contains(WatchFaceLayer.COMPLICATIONS_OVERLAY)) {
+//            drawClockHands(canvas, bounds, zonedDateTime)
+//        }
+//
+//        if (renderParameters.drawMode == DrawMode.INTERACTIVE &&
+//            renderParameters.watchFaceLayers.contains(WatchFaceLayer.BASE) &&
+//            watchFaceData.drawHourPips
+//        ) {
+//            drawNumberStyleOuterElement(
+//                canvas,
+//                bounds,
+//                watchFaceData.numberRadiusFraction,
+//                watchFaceData.numberStyleOuterCircleRadiusFraction,
+//                watchFaceColors.activeOuterElementColor,
+//                watchFaceData.numberStyleOuterCircleRadiusFraction,
+//                watchFaceData.gapBetweenOuterCircleAndBorderFraction
+//            )
+//        }
     }
 
     // ----- All drawing functions -----
